@@ -1,0 +1,9 @@
+//REQUIREMENTS
+
+g++
+python
+matplotlib
+
+//USAGE
+//run the command
+make
