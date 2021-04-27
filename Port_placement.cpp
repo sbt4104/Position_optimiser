@@ -19,21 +19,7 @@ void save_data(string outputfile, vector<block> blk){
     ofstream gpOut;
     gpOut.open(outputfile);
     for(int i=0; i<blk.size();i++){
-        /*
-        cout<<"block name "<<blk[i].block_name<<endl
-            <<"block number "<<blk[i].block_number<<endl
-            <<"total ports "<<blk[i].total_ports<<endl
-            <<"total edges "<<blk[i].total_edges<<endl
-            <<"total placed ports "<<blk[i].total_placed_ports<<endl;
-        */
-        for(int j=0;j<blk[i].total_ports;j++){
-            /*
-            cout<<"curr port name "<<blk[i].port_of_block[j].port_name<<endl
-            <<"curr port width "<<blk[i].port_of_block[j].width<<endl
-            <<"curr port position "<<blk[i].port_of_block[j].port_position<<endl
-            <<"curr edge number "<<blk[i].port_of_block[j].edge_number<<endl;
-            */
-            
+        for(int j=0;j<blk[i].total_ports;j++){            
             float x0,y0,x1,y1,x2,y2,x3,y3;
             x0 = blk[i].port_of_block[j].left_x_coord;
             y0 = blk[i].port_of_block[j].left_y_coord;
@@ -70,24 +56,16 @@ void save_data(string outputfile, vector<block> blk){
                 }
             }
         }
-        
-        /*
-        for(int j=0;j<blk[i].total_edges;j++){
-            cout<<"curr edge used "<<blk[i].edge_of_block[j].used_length <<endl
-            <<"curr edge total "<<blk[i].edge_of_block[j].total_length<<endl
-            <<"curr edge total_placed "<<blk[i].edge_of_block[j].total_placed<<endl;
-        }
-        cout<<endl<<endl;
-        */
     }
     gpOut.close();
 }
 
+/*
+Entry point
+*/
 int main() {
     //create a pseudo data to workout a solution
     int seed = time(0);
-    //cout<<"enter the seed please, later it will be automated\n";
-    //cin>>seed;
     cout<<"seed: "<<seed<<endl;
     srand(seed);
     map<string,int> map_block;
@@ -116,7 +94,6 @@ int main() {
         if(tp.length()==0)
             continue;
         splitString(arr, tp);
-        //cout<<"tp "<<tp<<endl;
         string block_name;
         vector<int> block_coord_vec;
         block_coord_vec.clear();
@@ -126,7 +103,6 @@ int main() {
                 continue;
         
             string curr = "";
-            //cout<<"here "<<arr[tu]<<" "<<arr[tu].length()<<endl;
             if(tu%2){
                 for(int i=1;i<arr[tu].length();i++)
                     curr += arr[tu][i];
@@ -151,26 +127,21 @@ int main() {
 
             if(!is_integer)
                 block_name = curr;
-            //cout<<curr<<" "<<num<<endl;
             }
             
             prt.clear();
             edg.clear();
             float size_of_edge = 0;
             for(int i=0;i<((block_coord_vec.size()/2)-1);i++){
-                //cout<<block_coord_vec[2*i]<<" "<<block_coord_vec[2*i +1]<<" ";
                 size_of_edge = abs(block_coord_vec[2*i] - block_coord_vec[2*i+2]) + \
                                 abs(block_coord_vec[2*i + 1] - block_coord_vec[2*i + 3]); 
-                //cout<<"size of edge "<<size_of_edge<<endl;
                 edg.push_back({0,(float)(size_of_edge),0});
             }
 
             //size of last edge
             size_of_edge = abs(block_coord_vec[block_coord_vec.size()-2] - block_coord_vec[0]) + \
                             abs(block_coord_vec[block_coord_vec.size()-1] - block_coord_vec[1]); 
-            //cout<<"size of edge "<<size_of_edge<<endl;
             edg.push_back({0,(int)(size_of_edge),0});
-            //cout<<endl;
             map_block[block_name] = block_index;
             int num_edges_in_block = block_coord_vec.size()/2;
             blk.push_back({block_name,block_coord_vec,edg,prt,block_index,0,num_edges_in_block,0});
@@ -276,52 +247,6 @@ int main() {
         }
         newfile1.close(); //close the file object.
     }
-
-        
-        
-    /*vector<int> coord = {300 ,350 ,300 ,655 ,610 ,655 ,610 ,350};
-    prt.push_back({"port_abc0_1",0.14*700,0,-1,0,0});
-    prt.push_back({"port_abc0_2",0.14*400,1,-1,0,0});
-    edg.push_back({0,305,0});
-    edg.push_back({0,310,0});
-    edg.push_back({0,305,0});
-    edg.push_back({0,310,0});
-    blk.push_back({"abc_0",coord,edg,prt,0,2,4,0});
-    //cout<<blk[0].edge_block.size()<<endl;
-    
-    edg.clear();
-    prt.clear();
-    coord.clear();
-    coord = {300, 950, 300, 1150, 600, 1150, 600 ,950};
-    edg.push_back({0,200,0});
-    edg.push_back({0,300,0});
-    edg.push_back({0,200,0});
-    edg.push_back({0,300,0});
-    prt.push_back({"port_abc1_1",0.14*400,0,-1,0,0});
-    blk.push_back({"abc_1",coord,edg,prt,1,1,4,0});
-    
-    edg.clear();
-    prt.clear();
-    coord.clear();
-    coord = {850, 950, 850, 1150, 1150, 1150, 1150, 950};
-    edg.push_back({0,200,0});
-    edg.push_back({0,300,0});
-    edg.push_back({0,200,0});
-    edg.push_back({0,300,0});
-    blk.push_back({"xyz_0",coord,edg,prt,2,0,4,0});
-    
-    edg.clear();
-    prt.clear();
-    coord.clear();
-    coord = {850, 350, 850, 650, 1150, 650, 1150, 350};
-    prt.push_back({"port_xyz1_1",0.14*700,0,-1,0,0});
-    edg.push_back({0,300,0});
-    edg.push_back({0,300,0});
-    edg.push_back({0,300,0});
-    edg.push_back({0,300,0});
-    blk.push_back({"xyz_1",coord,edg,prt,3,1,4,0});
-    //cout<<blk[3].edge_block.size()<<endl;
-    */
     
     //placement for each block without considering nets
     for(int i=0;i<blk.size();i++){
@@ -344,8 +269,6 @@ int main() {
                 
                 if(curr_edge_left >= blk[i].port_of_block[index_port].width){ //found a legal position
                     add_port_to_block(blk[i], index_port, pos_edge, port_coords);
-                    //blk[i].edge_of_block[pos_edge].total_placed++;
-                    //blk[i].total_placed_ports++;
                     flag = 1;
                 }
                 else{
@@ -360,11 +283,13 @@ int main() {
     
     int moves = 50000;
     while(moves--){
-        //three valid operations
-        //1] swap 2 elements of the same edge
-        //2] move block to another edge
-        //3] swap 2 elements of 2 different edges
-        
+        /*
+        three valid operations
+        1] swap 2 elements of the same edge
+        2] move block to another edge
+        3] swap 2 elements of 2 different edges
+        */
+
         swap_on_same_edge(blk, port_coords, port_connections);
         move_port_to_other_edge(blk, port_coords, port_connections);
     }

@@ -2,9 +2,14 @@
 
 using namespace std;
 
-bool check_if_rising_edge(int &j, block &blk){ //j is port index
+/*
+###
+#check if rising edge or falling edge
+#
+*/
+bool check_if_rising_edge(int &j, block &blk){ 
+    //j is port index
     bool rising_edge = true;
-    //check if rising edge or falling edge
 
         if(blk.port_of_block[j].edge_number == (blk.total_edges-1)){
             rising_edge = false; 
@@ -27,7 +32,7 @@ bool check_if_rising_edge(int &j, block &blk){ //j is port index
 }
 
 void add_port_to_block(block &blk,int &index_port,int &pos_edge, map<string,pair<float,float> > &port_coords){
-    //assin port to a edge
+    //assing port to a edge
     blk.port_of_block[index_port].edge_number = pos_edge;
     
     //assign port position and update all other parameters;
@@ -66,7 +71,6 @@ void add_port_to_block(block &blk,int &index_port,int &pos_edge, map<string,pair
     port_coords[blk.port_of_block[index_port].port_name] = \
         make_pair(blk.port_of_block[index_port].left_x_coord,blk.port_of_block[index_port].left_y_coord);
     blk.edge_of_block[pos_edge].used_length += blk.port_of_block[index_port].width;
-    //cout<<"add port to block completed\n";
 }
 
 

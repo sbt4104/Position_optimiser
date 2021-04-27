@@ -1,11 +1,14 @@
 #include "port_structure.hpp"
 #include "evaluate_placer.hpp"
 
+////
+// It updates total_ports_on_edge, sore_ports_of_edge 
+// store_ports_of_edge, 
+// evaluate current cost
+//
 float evaluate_cost(block &blk, int &curr_edge, int &total_ports_on_edge, vector<int> &store_ports_of_edge, \
                     vector<string> &store_ports_of_edge_names,     map<string,pair<float,float> > &port_coords, \
-                    map<string, vector<string> > &port_connections){ //It updates total_ports_on_edge, sore_ports_of_edge 
-                                                                     //store_ports_of_edge, 
-    //evaluate current cost
+                    map<string, vector<string> > &port_connections){ 
     total_ports_on_edge = 0;
     store_ports_of_edge.clear();
     store_ports_of_edge_names.clear();
@@ -19,15 +22,6 @@ float evaluate_cost(block &blk, int &curr_edge, int &total_ports_on_edge, vector
         }
     }
     
-    /*
-    cout<<"check "<<blk.edge_of_block[curr_edge].total_placed<<" "<<total_ports_on_edge<<endl;
-    if(blk.edge_of_block[curr_edge].total_placed > 4){
-        cout<<"current edge "<<curr_edge<<endl;
-    }
-    */
-    
-    //blk.edge_of_block[curr_edge].total_placed = total_ports_on_edge;
-    //cout<<"here1\n";
     float curr_cost = 0;
     for(int j=0; j<total_ports_on_edge; j++){
         string main_port = store_ports_of_edge_names[j];
@@ -41,7 +35,6 @@ float evaluate_cost(block &blk, int &curr_edge, int &total_ports_on_edge, vector
             curr_cost += sqrt(pow(connected_port_x - main_port_x,2) + pow(connected_port_y - main_port_y,2));
         }
     }
-    //cout<<"here2\n";
     return curr_cost;
 }
 
@@ -58,11 +51,8 @@ void  evaluate_coords(block &blk, int &curr_edge, int &total_ports_on_edge, vect
     port_coords[blk.port_of_block[prt_index].port_name] = make_pair(blk.port_of_block[prt_index].left_x_coord, \
                                                                     blk.port_of_block[prt_index].left_y_coord);
     
-    
-    //cout<<"index 0 "<<blk.port_of_block[prt_index].left_x_coord<< \
-        //" "<<blk.port_of_block[prt_index].left_y_coord<<endl;
-    //cout<<"current edge "<<curr_edge<<" rising_edge "<<rising_edge<<endl;
-    if(curr_edge % 2){ //parallel to x axis
+    //parallel to x axis
+    if(curr_edge % 2){
         if(rising_edge){
             for(int i=1;i<total_ports_on_edge;i++){
                 prt_index = store_ports_of_edge[i];

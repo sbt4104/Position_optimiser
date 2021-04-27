@@ -6,7 +6,7 @@ void swap_on_same_edge(vector<block> &blk,     map<string,pair<float,float> > &p
     //select the block
     int curr_block = rand()%blk.size();
 
-    //swap 2 elements on the same edge
+    ////swap 2 elements on the same edge
 
     //select the edge
     int curr_edge = rand()%blk[curr_block].total_edges;
@@ -20,8 +20,8 @@ void swap_on_same_edge(vector<block> &blk,     map<string,pair<float,float> > &p
     float curr_cost = evaluate_cost(blk[curr_block], curr_edge, total_ports_on_edge, \
                                     store_ports_of_edge, store_ports_of_edge_names, port_coords, port_connections);
 
+    //not a valid operation for this edge
     if(total_ports_on_edge < 2){
-        //not a valid operation for this edge
         return;
     }
 
@@ -52,7 +52,6 @@ void swap_on_same_edge(vector<block> &blk,     map<string,pair<float,float> > &p
     string temp_curr_string = store_ports_of_edge_names[store_port1];
     store_ports_of_edge_names[store_port1] = store_ports_of_edge_names[store_port2];
     store_ports_of_edge_names[store_port2] = temp_curr_string;
-     //cout<<"here3\n";
      
     //evaluate coord
     evaluate_coords(blk[curr_block], curr_edge, total_ports_on_edge, store_ports_of_edge, port_coords);
@@ -64,9 +63,9 @@ void swap_on_same_edge(vector<block> &blk,     map<string,pair<float,float> > &p
                     
     float updated_cost = evaluate_cost(blk[curr_block], curr_edge, total_ports_on_edge, \
                                     store_ports_of_edge, store_ports_of_edge_names, port_coords, port_connections);
-    //cout<<"current and updated costs "<<curr_cost<<" "<<updated_cost<<endl;
-
-    if(updated_cost > curr_cost) { //not a better solution, revert back to previous changes
+    
+    //not a better solution, revert back to previous changes
+    if(updated_cost > curr_cost) { 
         //get 2 different ports
         port1 = store_port1;
         port2 = store_port2;
@@ -101,8 +100,6 @@ void swap_on_same_edge(vector<block> &blk,     map<string,pair<float,float> > &p
 }
 
 void move_port_to_other_edge(vector<block> &blk,map<string,pair<float,float> > &port_coords, map<string, vector<string>> &port_connections){
-    
-    //cout<<"inside move to other edge\n";
     //select block
     int curr_block = rand()%blk.size();
     
@@ -111,6 +108,7 @@ void move_port_to_other_edge(vector<block> &blk,map<string,pair<float,float> > &
     map<string, vector<string>> reverse_port_connections = port_connections;
     float curr_cost = 0;
     float updated_cost = 0;
+
     //select the edge
     int curr_edge1=0;
     
@@ -146,7 +144,8 @@ void move_port_to_other_edge(vector<block> &blk,map<string,pair<float,float> > &
     
     int left_in_curr_edge2 = blk[curr_block].edge_of_block[curr_edge2].total_length - blk[curr_block].edge_of_block[curr_edge2].used_length;
     
-    if(left_in_curr_edge2 >= blk[curr_block].port_of_block[curr_port1].width){ //check if legal step
+    //check if legal step
+    if(left_in_curr_edge2 >= blk[curr_block].port_of_block[curr_port1].width){ 
         //remove curr_port1
         struct port port_temp = blk[curr_block].port_of_block[curr_port1];
         
@@ -158,7 +157,7 @@ void move_port_to_other_edge(vector<block> &blk,map<string,pair<float,float> > &
             int actual_port_pos = store_ports_of_edge[i];
             blk[curr_block].port_of_block[actual_port_pos].port_position--;
         }
-        //<shubham, check this statement's behavious in detail>
+
         blk[curr_block].port_of_block.erase(blk[curr_block].port_of_block.begin() + curr_port1);
         blk[curr_block].total_placed_ports--;
 
@@ -172,12 +171,7 @@ void move_port_to_other_edge(vector<block> &blk,map<string,pair<float,float> > &
         }
         else{
             updated_cost = evaluate_cost(blk[curr_block], curr_edge1, total_ports_on_edge, \
-                                            store_ports_of_edge, store_ports_of_edge_names, port_coords, port_connections);    
-            
-            /*for(int i=0;i<total_ports_on_edge;i++){
-                cout<<store_ports_of_edge[i]<<" "<<store_ports_of_edge_names[i]<<endl;
-            }*/
-            
+                                            store_ports_of_edge, store_ports_of_edge_names, port_coords, port_connections);                
             if(total_ports_on_edge!=0)
                 evaluate_coords(blk[curr_block], curr_edge1, total_ports_on_edge, store_ports_of_edge, port_coords);
         }
@@ -213,9 +207,8 @@ void move_port_to_other_edge(vector<block> &blk,map<string,pair<float,float> > &
             updated_cost += sqrt(pow(connected_port_x - main_port_x,2) + pow(connected_port_y - main_port_y,2));
         }
 
-        //cout<<"current and updated cost "<<curr_cost<<" "<<updated_cost<<endl;
-        
-        if(curr_cost < updated_cost){ //reverse changes
+        //reverse changes if cost function is not reduced
+        if(curr_cost < updated_cost){ 
             blk[curr_block] = reverse_block;
             port_coords = reverse_port_coords;
             port_connections = reverse_port_connections;
