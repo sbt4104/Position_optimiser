@@ -7,3 +7,5 @@ matplotlib
 //USAGE
 //run the command
 make
+
+//Please also check out the python code in the file (CSE_293_MCTS_Placer_v1.3) 
